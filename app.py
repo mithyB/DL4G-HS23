@@ -3,6 +3,7 @@ import logging
 from jass.service.player_service_app import PlayerServiceApp
 
 from agents.agent_rule_based_schieber import AgentRuleBasedSchieber
+from agents.carlo import AgentCarlo
 
 
 def create_app():
@@ -24,6 +25,7 @@ def create_app():
 
     # add some players
     app.add_player('rule_based', AgentRuleBasedSchieber())
+    app.add_player('carlo', AgentCarlo())
 
     return app
 
