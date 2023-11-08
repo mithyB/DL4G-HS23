@@ -63,28 +63,40 @@ class AgentCarlo(Agent):
         sorted_cards_by_score = []
 
         if obs.trump == DIAMONDS:
-            sorted_cards_by_score = [x for _, x in sorted(zip(self.trump_score, diamonds), reverse=True)]
+            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, diamonds), reverse=True)]]
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, hearts), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, spades), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, clubs), reverse=True)])
 
         if obs.trump == HEARTS:
-            sorted_cards_by_score = [x for _, x in sorted(zip(self.trump_score, hearts), reverse=True)]
+            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, hearts), reverse=True)]]
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, diamonds), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, spades), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, clubs), reverse=True)])
 
         if obs.trump == SPADES:
-            sorted_cards_by_score = [x for _, x in sorted(zip(self.trump_score, spades), reverse=True)]
+            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, spades), reverse=True)]]
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, diamonds), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, hearts), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, clubs), reverse=True)])
 
         if obs.trump == CLUBS:
-            sorted_cards_by_score = [x for _, x in sorted(zip(self.trump_score, clubs), reverse=True)]
+            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, clubs), reverse=True)]]
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, diamonds), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, hearts), reverse=True)])
             sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, spades), reverse=True)])
+
+        if obs.trump == UNE_UFE:
+            sorted_cards_by_score = [[x for _, x in sorted(zip(self.uneufe_score, diamonds), reverse=True)]]
+            sorted_cards_by_score.append([x for _, x in sorted(zip(self.uneufe_score, hearts), reverse=True)])
+            sorted_cards_by_score.append([x for _, x in sorted(zip(self.uneufe_score, spades), reverse=True)])
+            sorted_cards_by_score.append([x for _, x in sorted(zip(self.uneufe_score, clubs), reverse=True)])
+
+        if obs.trump == OBE_ABE:
+            sorted_cards_by_score = [[x for _, x in sorted(zip(self.obenabe_score, diamonds), reverse=True)]]
+            sorted_cards_by_score.append([x for _, x in sorted(zip(self.obenabe_score, hearts), reverse=True)])
+            sorted_cards_by_score.append([x for _, x in sorted(zip(self.obenabe_score, spades), reverse=True)])
+            sorted_cards_by_score.append([x for _, x in sorted(zip(self.obenabe_score, clubs), reverse=True)])
 
         card = np.where(sorted_cards_by_score == 1)[0][0]
 
