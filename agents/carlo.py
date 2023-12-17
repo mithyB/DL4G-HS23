@@ -55,50 +55,26 @@ class AgentCarlo(Agent):
 
         cards = self._rule.get_valid_cards_from_obs(obs)
 
-        diamonds = cards[0:9]
-        hearts = cards[9:18]
-        spades = cards[18:27]
-        clubs = cards[27:36]
-
-        sorted_cards_by_score = []
-
         if obs.trump == DIAMONDS:
-            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, diamonds), reverse=True)]]
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, hearts), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, spades), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, clubs), reverse=True)])
+            score_template = [item for sublist in [self.trump_score, self.no_trump_score, self.no_trump_score, self.no_trump_score] for item in sublist]
 
         if obs.trump == HEARTS:
-            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, hearts), reverse=True)]]
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, diamonds), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, spades), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, clubs), reverse=True)])
+            score_template = [item for sublist in [self.no_trump_score, self.trump_score, self.no_trump_score, self.no_trump_score] for item in sublist]
 
         if obs.trump == SPADES:
-            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, spades), reverse=True)]]
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, diamonds), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, hearts), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, clubs), reverse=True)])
+            score_template = [item for sublist in [self.no_trump_score, self.no_trump_score, self.trump_score, self.no_trump_score] for item in sublist]
 
         if obs.trump == CLUBS:
-            sorted_cards_by_score = [[x for _, x in sorted(zip(self.trump_score, clubs), reverse=True)]]
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, diamonds), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, hearts), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.no_trump_score, spades), reverse=True)])
-
-        if obs.trump == UNE_UFE:
-            sorted_cards_by_score = [[x for _, x in sorted(zip(self.uneufe_score, diamonds), reverse=True)]]
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.uneufe_score, hearts), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.uneufe_score, spades), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.uneufe_score, clubs), reverse=True)])
+            score_template = [item for sublist in [self.no_trump_score, self.no_trump_score, self.no_trump_score, self.trump_score] for item in sublist]
 
         if obs.trump == OBE_ABE:
-            sorted_cards_by_score = [[x for _, x in sorted(zip(self.obenabe_score, diamonds), reverse=True)]]
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.obenabe_score, hearts), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.obenabe_score, spades), reverse=True)])
-            sorted_cards_by_score.append([x for _, x in sorted(zip(self.obenabe_score, clubs), reverse=True)])
+            score_template = [item for sublist in [self.obenabe_score, self.obenabe_score, self.obenabe_score, self.obenabe_score] for item in sublist]
 
-        card = np.where(sorted_cards_by_score == 1)[0][0]
+        if obs.trump == UNE_UFE:
+            score_template = [item for sublist in [self.uneufe_score, self.uneufe_score, self.uneufe_score, self.uneufe_score] for item in sublist]
+
+        score_for_all_cards = [(x+1) * y for x, y in zip(score_template, cards)]
+        card = np.argmax(score_for_all_cards)
 
         self._logger.info('Card {}'.format(card))
 
