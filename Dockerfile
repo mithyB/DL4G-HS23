@@ -5,6 +5,7 @@ FROM python:3.9.18
 WORKDIR /python-docker
 
 COPY requirements.txt requirements.txt
+COPY trump.keras trump.keras
 RUN pip3 install -r requirements.txt
 
 COPY . .

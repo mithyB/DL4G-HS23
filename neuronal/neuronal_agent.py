@@ -14,12 +14,11 @@ playable = RuleSchieber()
 
 
 class Neuronal(Agent):
-
-    path_to_data = Path('C:\git\DL4G-HS23')
-    def __init__(self):
+    def __init__(self, path):
         self._logger = logging.getLogger(__name__)
         self._rule = RuleSchieber()
         self._rng = np.random.default_rng()
+        self.path_to_data = path
 
     def action_play_card(self, obs: GameObservation) -> int:
         self._logger.info('Card request')
