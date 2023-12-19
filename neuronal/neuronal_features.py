@@ -1,0 +1,1 @@
+defined_features = ['J9', 'AKQ', 'AK9', 'AKJ', 'AQJ', '678']

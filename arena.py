@@ -4,12 +4,12 @@
 #
 
 import logging
-import numpy as np
+from pathlib import Path
 
-from jass.agents.agent import Agent
 from jass.arena.arena import Arena
-from jass.agents.agent_random_schieber import AgentRandomSchieber
+
 from agents.agent_rule_based_schieber import AgentRuleBasedSchieber
+from neuronal.neuronal_agent import Neuronal
 
 
 def main():
@@ -19,8 +19,8 @@ def main():
 
     # setup the arena
     arena = Arena(nr_games_to_play=1000, save_filename='arena_games')
-    player = AgentRandomSchieber()
-    my_player = AgentRuleBasedSchieber()
+    player = AgentRuleBasedSchieber()
+    my_player = Neuronal(Path('C:\git\DL4G-HS23'))
 
     arena.set_players(my_player, player, my_player, player)
     print('Playing {} games'.format(arena.nr_games_to_play))

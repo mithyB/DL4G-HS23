@@ -1,9 +1,11 @@
 import logging
+from pathlib import Path
 
 from jass.service.player_service_app import PlayerServiceApp
 
 from agents.agent_rule_based_schieber import AgentRuleBasedSchieber
 from agents.carlo import AgentCarlo
+from neuronal.neuronal_agent import Neuronal
 
 
 def create_app():
@@ -26,6 +28,7 @@ def create_app():
     # add some players
     app.add_player('rule_based', AgentRuleBasedSchieber())
     app.add_player('carlo', AgentCarlo())
+    app.add_player('neuronal_firsty', Neuronal(Path('')))
 
     return app
 
