@@ -9,14 +9,14 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 
-path_to_data = Path('C:\git\DL4G')
+path_to_data = Path('C:\\Users\\micha\\code\\DL4G-HS23')
 
 users_data = json.load(open(Path(path_to_data, 'player/player_all_stat.json'), 'r'))
 users = pd.DataFrame(users_data)
-print("Before Removing users: {}".format(len(users.values)))
-users = users[users['mean'] >= 80]
-users = users[users['nr'] >= 100]
-print("After Removing users: {}".format(len(users.values)))
+# print("Before Removing users: {}".format(len(users.values)))
+# users = users[users['mean'] >= 80]
+# users = users[users['nr'] >= 100]
+# print("After Removing users: {}".format(len(users.values)))
 
 data = pd.read_csv(path_to_data / 'play/final_3.csv', header=None)
 
@@ -47,11 +47,11 @@ print(input[0])
 print(output[0])
 def train():
     model = keras.Sequential()
-    model.add(keras.layers.Dense(64, activation='relu', input_shape=[len(feature_columns)]))
-    model.add(keras.layers.Dense(len(feature_columns), activation='softmax'))
+    model.add(keras.layers.Dense(16, activation='relu', input_shape=[len(feature_columns)]))
+    model.add(keras.layers.Dense(16, activation='softmax'))
     model.add(keras.layers.Dense(len(feature_columns), activation='softmax'))
     model.compile(loss='mse', optimizer='sgd', metrics=['accuracy'])
-    history = model.fit(input, output, validation_split=0.25, epochs=100, batch_size=128)
+    history = model.fit(input, output, validation_split=0.2, epochs=36, batch_size=256)
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
     plt.title('Loss')

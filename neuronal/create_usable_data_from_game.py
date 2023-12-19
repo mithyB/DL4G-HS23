@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import os
 
-path_to_data = Path('C:\git\DL4G')
+path_to_data = Path('C:\\Users\\micha\\code\\DL4G-HS23')
 STOP_AT_COUNT = 10_000_000
 directory = os.fsencode(Path(path_to_data, 'data'))
 lines = []
