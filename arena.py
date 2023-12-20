@@ -10,6 +10,7 @@ from jass.arena.arena import Arena
 
 from agents.agent_rule_based_schieber import AgentRuleBasedSchieber
 from neuronal.neuronal_agent import Neuronal
+from neuronal.neuronal_rule_based_combined import NeuronalRuleBasedCombined
 
 
 def main():
@@ -20,7 +21,7 @@ def main():
     # setup the arena
     arena = Arena(nr_games_to_play=1000, save_filename='arena_games')
     player = AgentRuleBasedSchieber()
-    my_player = Neuronal(Path('C:\git\DL4G-HS23'))
+    my_player = NeuronalRuleBasedCombined(Path('C:\git\DL4G-HS23'))
 
     arena.set_players(my_player, player, my_player, player)
     print('Playing {} games'.format(arena.nr_games_to_play))
