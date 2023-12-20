@@ -10,18 +10,57 @@ from jass.game.game_util import convert_one_hot_encoded_cards_to_str_encoded_lis
 from jass.game.rule_schieber import RuleSchieber
 from neuronal.neuronal_features import defined_features
 
-playable = RuleSchieber()
-
-
 class Neuronal(Agent):
+
+    play_model = None
+    trump_model = None
     def __init__(self, path):
         self._logger = logging.getLogger(__name__)
         self._rule = RuleSchieber()
         self._rng = np.random.default_rng()
         self.path_to_data = path
+        self.play_model = keras.models.load_model(Path(self.path_to_data, 'data.keras'))
+        self.trump_model = keras.models.load_model(Path(self.path_to_data, 'trump.keras'))
 
     def action_play_card(self, obs: GameObservation) -> int:
         self._logger.info('Card request')
+
+        # input should be:
+        # 0 - 2: [0-35] for each player
+        # 3: own card played [0-36]: get best for playable card for this?
+        # 4 - 13: owned cards: [0-8] all?
+        # 14: trump
+        input = np.zeros(shape=[14], dtype=np.int32)
+        input[13] = obs.trump
+
+        for num, current_trick in enumerate(obs.current_trick):
+            input[num] = current_trick
+
+        j = 0
+        for num, card in enumerate(obs.hand):
+            if card != 0:
+                input[j + 4] = num
+                j = j + 1
+
+        valid_cards = self._rule.get_valid_cards_from_obs(obs)
+        results = []
+        for num, v_c in enumerate(valid_cards):
+            if not v_c == 0:
+                input[3] = num
+                results.append([num, np.max(self.play_model.predict(input.reshape((1, -1))))])
+
+
+        max = -1
+        res = -1
+        for r in results:
+            if r[1] > max:
+                max = r[1]
+                res = r[0]
+
+        if not res == -1:
+            self._logger.info('Playing from neuronal {}'.format(res))
+            return res
+
         # cards are one hot encoded
         valid_cards = self._rule.get_valid_cards_from_obs(obs)
         # convert to list and draw a value
@@ -30,7 +69,6 @@ class Neuronal(Agent):
         return card
 
     def action_trump(self, obs: GameObservation) -> int:
-        model = keras.models.load_model(Path(self.path_to_data, 'trump.keras'))
         encoded_list = convert_one_hot_encoded_cards_to_str_encoded_list(obs.hand)
         finals = obs.hand
 
@@ -50,7 +88,7 @@ class Neuronal(Agent):
         self.debug(finals)
 
         # reshape because it needs to be a 2-Dimensional Array
-        output = model.predict(finals.reshape((1, -1)))
+        output = self.trump_model.predict(finals.reshape((1, -1)))
         return np.argmax(output)
 
     def debug(self, finals):
